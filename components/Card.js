@@ -1,9 +1,12 @@
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import React from "react";
 
-const Card = ({ item }) => {
+const Card = ({ item, addItem }) => {
   return (
-    <View className="p-3 rounded-xl border border-gray-200 flex-row items-center justify-between mb-4">
+    <TouchableOpacity
+      onPress={() => addItem(item)}
+      className="p-3 rounded-xl border border-gray-200 flex-row items-center justify-between mb-4"
+    >
       <View className="flex-row items-center space-x-2">
         <Image
           source={{
@@ -15,7 +18,7 @@ const Card = ({ item }) => {
         <Text className="text-gray-400 font-semibold">{item?.title}</Text>
       </View>
       <Text className="text-gray-500 font-bold">Ksh. {item?.price * 100}</Text>
-    </View>
+    </TouchableOpacity>
   );
 };
 

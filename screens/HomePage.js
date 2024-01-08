@@ -7,7 +7,7 @@ import {
   TextInput,
   ScrollView,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   categories,
   data,
@@ -20,12 +20,14 @@ import * as Icons from "react-native-heroicons/solid";
 import OrderCard from "../components/OrderCard";
 import Card from "../components/Card";
 import FilterCard from "../components/FilterCard";
+import { CartContext } from "../context/CartContext";
 
 const HomePage = ({ navigation }) => {
   const [filterValue, setFilterValue] = useState(categories[0]);
   const [filterdData, setFilterdData] = useState([]);
   const [searchValue, setSearchValue] = useState("");
   const [query, setQuery] = useState("");
+  const { cartStore, addToCart } = useContext(CartContext);
 
   useEffect(() => {
     if (query) {
@@ -42,7 +44,7 @@ const HomePage = ({ navigation }) => {
   }, [filterValue, query]);
 
   return (
-    <View className="flex-1">
+    <View className="flex-1 relative">
       <View
         style={{ height: height * 0.31, backgroundColor: secondaryColor }}
         className="px-3 mt-2"
@@ -85,7 +87,7 @@ const HomePage = ({ navigation }) => {
           </View>
           <TouchableOpacity
             className="bg-white px-5 py-1.5 rounded-full"
-            onPress={() => navigation.navigate("Cart")}
+            onPress={() => navigation.navigate("Scanner")}
           >
             <Icons.QrCodeIcon size={20} color={"gray"} />
           </TouchableOpacity>
@@ -141,11 +143,21 @@ const HomePage = ({ navigation }) => {
         <SafeAreaView className="flex-1">
           <ScrollView showsVerticalScrollIndicator={false}>
             {filterdData.map((val, i) => (
-              <Card item={val} key={i} />
+              <Card item={val} key={i} addItem={addToCart} />
             ))}
           </ScrollView>
         </SafeAreaView>
       </View>
+      {cartStore.length > 0 && (
+        <TouchableOpacity
+          style={{ backgroundColor: primaryColor }}
+          className="flex-row items-center justify-between p-3 rounded-full absolute bottom-10 w-[80%] self-center"
+          onPress={() => navigation.navigate("Cart")}
+        >
+          <Text className="text-white text-xs">Proceed New Order</Text>
+          <Text className="text-white text-xs">{cartStore.length} Items</Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 };
